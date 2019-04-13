@@ -3,6 +3,8 @@ import json
 import os
 import re
 
+# Version 1 
+
 def load_fichero_sentimientos(path):	
     valores = {}
     if os.path.exists(path):
