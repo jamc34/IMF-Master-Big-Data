@@ -1,0 +1,6 @@
+git commands:
+================================================================
+git clone https://github.com/jamc34/IMF-Master-Big-Data.git
+git commit modulo-1 
+git push origin master
+
