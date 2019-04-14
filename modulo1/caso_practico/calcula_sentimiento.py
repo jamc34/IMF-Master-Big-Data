@@ -9,8 +9,8 @@ def load_fichero_sentimientos(path):
 	    fichero=open(path)
 	    for linea in fichero:
 	        termino,valor=linea.split("\t")
-	        pattern="\W"+termino+"\W"
-	        valores[termino]={'valor':int(valor), 'regex': re.compile(pattern,re.IGNORECASE)}
+	        pattern="(?i)\\b"+termino+"\\b"
+	        valores[termino.lower()]={'valor':int(valor), 'regex': re.compile(pattern)}
 	    fichero.close()
     else:
         print("El fichero ",path," no existe.")
@@ -36,7 +36,8 @@ def valorar_tweets(tweets, valores):
     for tweet in tweets:
         valor_tweet = 0    
         for termino, termdata in valores.items():
-            if termdata['regex'].search(tweet) != None:
+            #print ("Termdata=", termdata )
+            if termdata['regex'].search(tweet) != None:   # JAMC use split instead of search for the case of multiple occurrences
                 valor_tweet+=termdata['valor']
                 print("Encontrado termino ", termino, " en tweet: ", tweet, " con valor ", termdata['valor'])
         print("EL SIGUIENTE TWEET: '", tweet, "' TIENE UN SENTIMIENTO ASOCIADO DE: ", valor_tweet)            
@@ -47,9 +48,10 @@ def valorar_tweets_fast(tweets, valores):
         valor_tweet = 0    
         words=re.split(r'\W+',tweet)
         for word in words:
-            if word in valores:
-                valor_tweet+=valores[word]['valor']
-                print("Encontrado termino ", word, " en tweet: ", tweet, " con valor ", valores[word]['valor'])
+            lcword = word.lower()
+            if lcword in valores:
+                valor_tweet+=valores[lcword]['valor']
+                print("Encontrado termino ", word, " en tweet: ", tweet, " con valor ", valores[lcword]['valor'])
         print("EL SIGUIENTE TWEET: '", tweet, "' TIENE UN SENTIMIENTO ASOCIADO DE: ", valor_tweet)            
 
 path_fichero_tweets=argv[1]
