@@ -25,7 +25,6 @@ def load_fichero_tweets(path):
                 continue
             lineapy = json.loads(linea)
             if 'text' in lineapy: 
-                # print("Text found: ",lineapy['text'])
                 tweets.append(lineapy['text'])
         fichero.close()
     else:
@@ -36,10 +35,10 @@ def valorar_tweets(tweets, valores):
     for tweet in tweets:
         valor_tweet = 0    
         for termino, termdata in valores.items():
-            #print ("Termdata=", termdata )
-            if termdata['regex'].search(tweet) != None:   # JAMC use split instead of search for the case of multiple occurrences
-                valor_tweet+=termdata['valor']
-                print("Encontrado termino ", termino, " en tweet: ", tweet, " con valor ", termdata['valor'])
+            ocurrencias = len(termdata['regex'].findall(tweet))   # Cuantas veces aparece el termino en el tweet
+            if ocurrencias > 0:   # JAMC use split instead of search for the case of multiple occurrences
+                valor_tweet+=(termdata['valor']*ocurrencias)
+                #print("Encontrado termino ", termino, " en tweet: ", tweet, " con valor ", termdata['valor'])
         print("EL SIGUIENTE TWEET: '", tweet, "' TIENE UN SENTIMIENTO ASOCIADO DE: ", valor_tweet)            
 
 # No tiene en cuenta grupos de palabras
@@ -51,7 +50,7 @@ def valorar_tweets_fast(tweets, valores):
             lcword = word.lower()
             if lcword in valores:
                 valor_tweet+=valores[lcword]['valor']
-                print("Encontrado termino ", word, " en tweet: ", tweet, " con valor ", valores[lcword]['valor'])
+                # print("Encontrado termino ", word, " en tweet: ", tweet, " con valor ", valores[lcword]['valor'])
         print("EL SIGUIENTE TWEET: '", tweet, "' TIENE UN SENTIMIENTO ASOCIADO DE: ", valor_tweet)            
 
 path_fichero_tweets=argv[1]
@@ -64,8 +63,6 @@ if len(argv) > 3:
 
 valores=load_fichero_sentimientos(path_fichero_sentimientos)
 tweets=load_fichero_tweets(path_fichero_tweets)
-# print("Tweets: ", tweets );
-# print ("Valores: ", valores.items())
 if 'fast' in options:
     print("Do it fast")
     valorar_tweets_fast(tweets, valores)
