@@ -54,7 +54,7 @@ def cargar_fichero_tweets(path):
 # Si el resultado es 1 significa que o bien no se ha encontrado, en cuyo caso seguimos buscando recursivamente, o el tweet es exactamente igual que el grupo de palabras, en cuyo caso anadimos el grupo a la lista
 def parse_tweet_recursivo(tweet, grupos,lista_terminos):
     if len(grupos) == 0:
-        lista_terminos.extend(re.split(r"\W+",tweet))
+        lista_terminos.extend(re.split('\W+',tweet.strip()))
         return
     grupo= grupos.pop()
     restos=grupo["regex"].split(tweet)
@@ -106,7 +106,7 @@ def valorar_tweets(tweets, valores, formato):
             print("EL SIGUIENTE TWEET: '", tweet, "' TIENE UN SENTIMIENTO ASOCIADO DE: ", valor_tweet)            
         elif formato == 'ejercicio2':
             for t in lista_terminos:
-                if t.lower() not in valores:
+                if t != '' and t.lower() not in valores:
                     print( t, ": ", valor_tweet )
 
 # Funcion principal
